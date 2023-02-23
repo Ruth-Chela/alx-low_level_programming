@@ -32,4 +32,3 @@ printf(" %d", n);
 printf("\n");
 return (0);
 }
-0 comments on commit 59a9bf5
