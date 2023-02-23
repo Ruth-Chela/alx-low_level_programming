@@ -1,18 +1,29 @@
-#include <stdio.h>
+#include "main.h"
 
 /**
- * main - print prime
- * Return: 0
- */
+* print_triangle - create triangle
+* @size: params
+* Return: 0
+*/
 
-int main(void)
+void print_triangle(int size)
 {
-unsigned long int i = 3, n = 612852475143;
-for (; i < 12057; i += 2)
+int i = 0, j, n = size - 1;
+if (size > 0)
 {
-while (n % i == 0 && n != i)
-n /= i;
+for (; i < size; i++)
+{
+for (j = 0; j < size; j++)
+{
+if (j < n)
+_putchar(' ');
+else
+_putchar('#');
 }
-printf("%lu\n", n);
-return (0);
+n--;
+_putchar('\n');
+}
+}
+else
+_putchar('\n');
 }
