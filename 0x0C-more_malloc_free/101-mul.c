@@ -1,47 +1,92 @@
-#include "main.h"
-
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
 /**
- * _realloc - reallocates a memory block using malloc and free
- * @ptr: input pointer
- * @old_size: size of old ptr
- * @new_size: size of new ptr
- * Return: reallocated ptr
+ * _isnumber - checks if string is number
+ *
+ * @s: string
+ *
+ * Return: 1 if number, 0 if not
  */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+int _isnumber(char *s)
 {
-	void *res = NULL;
+	int i, check, d;
 
-	if (new_size == old_size)
-		return (ptr);
-	if (!ptr)
+	d = 0, check = 1;
+	for (i = 0; *(s + i) != 0; i++)
 	{
-		free(ptr);
-		res = malloc(new_size);
-		return (res);
+		d = isdigit(*(s + i));
+		if (d == 0)
+		{
+			check = 0;
+			break;
+		}
 	}
-	if (!new_size && ptr)
-	{
-		free(ptr);
-		return (NULL);
-	}
-	res = malloc(new_size);
-	_memcpy(res, ptr, old_size);
-	free(ptr);
-	return (res);
+	return (check);
 }
 
 /**
- * _memcpy - copies memory area
- * @dest: destination string
- * @src: source string
- * @n: number of bytes to be copied
- * Return: pointer to dest
+ * _callocX - reserves memory initialized to 0
+ *
+ * @nmemb: # of bytes
+ *
+ * Return: pointer
  */
-char *_memcpy(char *dest, char *src, unsigned int n)
+char *_callocX(unsigned int nmemb)
 {
-	char *ptr = dest;
+	unsigned int i;
+	char *p;
 
-	while (n--)
-		*dest++ = *src++;
-	return (ptr);
+	p = malloc(nmemb + 1);
+	if (p == 0)
+		return (0);
+	for (i = 0; i < nmemb; i++)
+		p[i] = '0';
+	p[i] = '\0';
+	return (p);
+}
+
+/**
+ * main - multiplies inf numbers
+ *
+ * @argc: # of cmd line args
+ * @argv: cmd line args
+ * Return: No return
+ */
+int main(int argc, char **argv)
+{
+	int i, j, l1, l2, lful, mul, add, ten, ten2, tl, zer = 0;
+	char *res;
+
+	if (argc != 3 || _isnumber(argv[1]) == 0 || _isnumber(argv[2]) == 0)
+		printf("Error\n"), exit(98);
+	if (atoi(argv[1]) == 0 || atoi(argv[2]) == 0)
+		printf("0\n"), exit(0);
+	l1 = strlen(argv[1]), l2 = strlen(argv[2]);
+	lful = l1 + l2;
+	res = _callocX(lful);
+	if (res == 0)
+		printf("Error\n"), exit(98);
+	for (i = l2 - 1; i >= 0; i--)
+	{
+		ten = 0, ten2 = 0;
+		for (j = l1 - 1; j >= 0; j--)
+		{
+			tl = i + j + 1;
+			mul = (argv[1][j] - '0') * (argv[2][i] - '0') + ten;
+			ten =  mul / 10;
+			add = (res[tl] - '0') + (mul % 10) + ten2;
+			ten2 = add / 10;
+			res[tl] = (add % 10) + '0';
+		}
+		res[tl - 1] = (ten + ten2) + '0';
+	}
+	if (res[0] == '0')
+		zer = 1;
+	for (; zer < lful; zer++)
+		printf("%c", res[zer]);
+	printf("\n");
+	free(res);
+	return (0);
 }
